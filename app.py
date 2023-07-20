@@ -7,9 +7,6 @@ import requests
 import torch
 import torch.nn as nn
 from urllib import parse
-from dotenv import load_dotenv
-
-load_dotenv()
 
 MAL_CLIENT_ID = os.getenv("MAL_CLIENT_ID")
 
@@ -25,8 +22,11 @@ def fetch_anime_image(anime):
     headers = {"X-MAL-CLIENT-ID": MAL_CLIENT_ID}
     query_response = requests.get(query_url, headers=headers)
 
-    image_url = query_response.json()["data"][0]["node"]["main_picture"]["large"]
-    return image_url
+    try:
+        image_url = query_response.json()["data"][0]["node"]["main_picture"]["large"]
+        return image_url
+    except:
+        return None
 
 
 def recommend(anime):
@@ -34,13 +34,17 @@ def recommend(anime):
     anime_embedding = anime_embeddings[anime_index][None]
 
     embedding_distances = nn.CosineSimilarity(dim=1)(anime_embeddings, anime_embedding)
-    recommendation_indexes = embedding_distances.argsort(descending=True)[1:6].tolist()
+    recommendation_indexes = embedding_distances.argsort(descending=True)[1:].tolist()
 
     recommendations = []
     for recommendation_index in recommendation_indexes:
         recommendation_anime = anime_indexes.iloc[recommendation_index]["Anime"]
-        recommendation_url = fetch_anime_image(recommendation_anime)
-        recommendations.append((recommendation_url, recommendation_anime))
+        recommendation_image = fetch_anime_image(recommendation_anime)
+        if recommendation_image is not None:
+            recommendations.append((recommendation_image, recommendation_anime))
+
+        if len(recommendations) == 5:
+            break
 
     return recommendations
 
@@ -65,7 +69,7 @@ with gr.Blocks(css=css) as space:
             dropdown = gr.Dropdown(container=False, choices=animes)
             selection_image = gr.Image(show_label=False, width=225, visible=False)
 
-    gallery = gr.Gallery(label="Recommendations", object_fit="scale-down")
+    gallery = gr.Gallery(label="Recommendations", columns=[2, 2, 3, 3, 4, 5])
 
     def submit(anime):
         if anime is None:
