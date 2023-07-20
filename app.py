@@ -66,7 +66,7 @@ with gr.Blocks(css=css) as space:
         gr.Markdown("Enter an anime:")
 
         with gr.Column(elem_id="selection_column"):
-            dropdown = gr.Dropdown(container=False, choices=animes)
+            dropdown = gr.Dropdown(container=False, choices=animes, show_label=False)
             selection_image = gr.Image(show_label=False, width=225, visible=False)
 
     gallery = gr.Gallery(label="Recommendations", columns=[2, 2, 3, 3, 4, 5])
