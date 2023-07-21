@@ -29,7 +29,7 @@ def recommend(index):
 
 css = """
 .gradio-container {align-items: center}
-#container {max-width: 800px}
+#container {max-width: 795px}
 """
 
 
@@ -45,7 +45,7 @@ with gr.Blocks(css=css) as space:
 
         dropdown = gr.Dropdown(label="Enter an anime", choices=title_list, type="index")
 
-        gallery = gr.Gallery(label="Recommendations", rows=1, columns=3)
+        gallery = gr.Gallery(label="Recommendations", rows=1, columns=3, height="265")
 
         dropdown.change(fn=recommend, inputs=dropdown, outputs=gallery)
 
