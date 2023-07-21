@@ -39,7 +39,8 @@ with gr.Blocks(css=css) as space:
             """
         # Anime Collaborative Filtering System
         This is a Pytorch recommendation model that uses neural collaborative filtering.
-        Enter an anime, and it will suggest similar shows!
+        Enter an anime, and it will suggest similar shows! \
+        Source code: [https://github.com/EdZ543/anime-collaborative-filtering-system](https://github.com/EdZ543/anime-collaborative-filtering-system)
         """
         )
 
